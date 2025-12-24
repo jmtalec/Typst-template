@@ -1,0 +1,92 @@
+#import "tf-globals.typ": *
+#import "tf-utils.typ": *
+
+#let default-author = (
+  name: none,
+  affiliation: none,
+  corr: none,
+  id: "a"
+)
+
+#let template-info(title, abstract, authors, keywords, els-columns, els-format) = {
+  // Set authors and affiliation
+  let names = ()
+  let names-meta = ()
+  let affiliations = ()
+  let coord = ([Auteurs correspondants : #h(1.4em)],)
+  for author in authors {
+    let new-author = default-author + author
+    
+    let auth = (box(new-author.name))
+    if new-author.corr != none and author.len() == 1{
+      coord = ()
+      coord.push((new-author.name, " :  ", new-author.corr).join())
+    } else {
+      coord.push(([ #linebreak()#h(1.4em)],new-author.name, " :  ", new-author.corr).join())
+    }
+    names.push(box(auth))
+    names-meta.push(new-author.name)
+
+    if new-author.affiliation == none {
+      continue
+    }
+    else {
+      affiliations.push((new-author.affiliation, linebreak()).join())
+    }
+  }
+
+  let author-string = if authors.len() == 2 {
+    names.join(" et ")
+  } else {
+    names.join(", ", last: " et ")
+  }
+
+  // Format title and affiliation
+  let els-authors = align(center, {
+    par(leading: 0.95em, text(size: font-size.title, title, weight: "bold"))
+    v(0.9em)
+    text(size: font-size.author, author-string)
+    v(0.2em)
+    par(leading: 0.65em, text(size: font-size.small, emph(affiliations.join()), top-edge: 0.5em))
+    v(1.75em)
+  })
+
+  // Format the abstract
+  let els-abstract = if abstract != none {
+    set par(justify: true)
+    line(length: 100%, stroke: 0.5pt)
+    v(-0.25em)
+    text(weight: "bold")[Abstract]
+    if els-format.type.contains("review") {v(0.5em)} else {v(-0.2em)}
+    abstract
+    if els-format.type.contains("review") {linebreak()} else {v(0em)}
+    if keywords != () {
+      let kw = ()
+      for keyword in keywords{
+        kw.push(keyword)
+      }
+
+    let kw-string = if kw.len() > 1 {
+        kw.join(", ")
+      } else {
+        kw.first()
+      }
+      text((emph("Mots clés : "), kw-string).join())
+    }
+    v(-0.2em)
+    line(length: 100%, stroke: 0.5pt)
+    if els-format.type.contains("review") {v(-0.75em)}
+    else if els-format.type.contains("5p") {v(-0.25em)}
+    else {none}
+  }
+
+  let els-info = (
+    els-authors: els-authors,
+    els-abstract: els-abstract,
+    coord: coord.join(),
+    els-meta: names-meta
+  )
+
+  return els-info
+ els-info
+}

@@ -1,0 +1,19 @@
+[package]
+name = "taffetas"
+version = "0.1.0"
+authors = [ "Mathieu Aucejo" ]
+license = "MIT"
+description = """
+Français : Un modèle chaleureux et professionnel qui confère à votre document une grande lisibilité et une forte personnalité.
+
+Inspiré du modèle elsearticle de Mathieu AUCEJO """
+entrypoint = "src/taffetas.typ"
+categories = [ "report" ]
+repository = "https://github.com/maucejo/elsearticle"
+disciplines = [ "mathematics", "physics" ]
+compiler = "0.14.1"
+
+[template]
+path = "src"
+entrypoint = "taffetas.typ"
+thumbnail = ""
